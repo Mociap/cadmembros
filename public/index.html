@@ -46,7 +46,6 @@
             <div class="form-group">
                 <label for="nome">Nome Conforme RG</label>
                 <input type="text" class="form-control" id="nome" required>
-                <small id="nomeError" style="color: red; display: none;">Nome já cadastrado</small>
             </div>
             <div class="form-group">
                 <label for="dtnasc">Data de Nascimento</label>
@@ -126,7 +125,7 @@
                 </div>
                 <input type="hidden" id="arrolamento" name="arrolamento" required>
             </div>
-            <button type="submit" class="btn btn-primary btn-block" id="cadastrarBtn">Cadastrar</button>
+            <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
         </form>
     </div>
 
@@ -157,9 +156,6 @@
         var inputRede = document.getElementById('rede');
         var inputCelular = document.getElementById('celular');
         var selectIgrejas = document.getElementById('igreja');
-        var inputNome = document.getElementById('nome');
-        var nomeError = document.getElementById('nomeError');
-        var cadastrarBtn = document.getElementById('cadastrarBtn');
 
         // Máscara para o campo "Número do Celular"
         VMasker(inputCelular).maskPattern("(99) 99999-9999");
@@ -201,38 +197,6 @@
                         console.error('Erro ao consultar a coleção "estruturacelula":', error);
                     });
             }
-        });
-
-        // Função para verificar se o nome já está cadastrado
-        function verificarNomeExistente(nome) {
-            return bancoDeDados.collection('membros')
-                .where('nome', '==', nome)
-                .get()
-                .then(function(querySnapshot) {
-                    return !querySnapshot.empty;
-                })
-                .catch(function(error) {
-                    console.error('Erro ao verificar nome existente:', error);
-                    return false;
-                });
-        }
-
-        // Adicionar evento de blur (sair do campo) no campo "Nome"
-        inputNome.addEventListener('blur', function() {
-            var nome = inputNome.value.toUpperCase();
-
-            verificarNomeExistente(nome)
-                .then(function(nomeExistente) {
-                    if (nomeExistente) {
-                        // Nome já cadastrado
-                        nomeError.style.display = 'block';
-                        cadastrarBtn.disabled = true;
-                    } else {
-                        // Nome não cadastrado
-                        nomeError.style.display = 'none';
-                        cadastrarBtn.disabled = false;
-                    }
-                });
         });
 
         // Adicionar evento de envio do formulário
